@@ -5,6 +5,9 @@ This [esbuild](https://esbuild.github.io/)/[Bun](https://bun.sh/docs/bundler) bu
 > [!WARNING]
 > You cannot use it in `--compile` mode ([Feature issue](https://github.com/oven-sh/bun/issues/11895))
 
+> [!WARNING]
+> For now, it runs only by [Bun](https://bun.sh/) runtime
+
 # [Bun build](https://bun.sh/docs/bundler) usage
 
 ```ts
