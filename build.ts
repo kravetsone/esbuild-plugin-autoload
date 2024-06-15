@@ -1,12 +1,8 @@
-import autoload from "./src";
+import { $ } from "bun";
 
 await Bun.build({
-	entrypoints: ["example/index.ts"],
-	outdir: "out",
-	plugins: [
-		autoload({
-			pattern: "**/*.{ts,tsx,js,jsx,mjs,cjs}",
-			directory: "./example/routes",
-		}),
-	],
+	entrypoints: ["./src/index.ts"],
+	outdir: "./dist",
 }).then(console.log);
+
+await $`tsc --emitDeclarationOnly`;
