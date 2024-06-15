@@ -23,8 +23,8 @@ const fsUsageMock = /* ts */ `{
 }`;
 
 export function autoload(options?: AutoloadOptions) {
-	const pattern = options.pattern ?? "**/*.{ts,tsx,js,jsx,mjs,cjs}";
-	const directory = options.directory ?? "./example/routes";
+	const pattern = options?.pattern ?? "**/*.{ts,tsx,js,jsx,mjs,cjs}";
+	const directory = options?.directory ?? "./example/routes";
 
 	return {
 		name: "autoload",
