@@ -1,0 +1,13 @@
+{
+  "name": "esbuild-plugin-autoload",
+  "module": "src/index.ts",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "elysia": "^1.0.23",
+    "elysia-autoload": "^0.2.4"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "type": "module"
+}
