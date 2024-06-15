@@ -7,7 +7,7 @@ export interface AutoloadOptions {
 	directory?: string;
 }
 
-export default function autoload(options: AutoloadOptions) {
+export function autoload(options: AutoloadOptions) {
 	const pattern = options.pattern ?? "**/*.{ts,tsx,js,jsx,mjs,cjs}";
 	const directory = options.directory ?? "./example/routes";
 
@@ -77,3 +77,5 @@ export default function autoload(options: AutoloadOptions) {
 		},
 	} satisfies BunPlugin;
 }
+
+export default autoload;
