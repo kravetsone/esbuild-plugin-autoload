@@ -47,11 +47,10 @@ export function autoload(options?: AutoloadOptions) {
 						/new Bun\.glob\((.*)\)/i,
 						/* ts */ `{
                         async *scan() {
-                            ${files.map((file) => `yield "${file}"`)}
+                            ${files.map((file) => `yield "${file}";`).join("\n")}
                         }
                     }`,
 					);
-
 					content = content.replace(`require("node:fs")`, fsUsageMock);
 					content = content.replace(
 						`import fs from "node:fs";`,
@@ -66,7 +65,7 @@ export function autoload(options?: AutoloadOptions) {
 															(file) => /* ts */ `
                                 "${file}": await import("${path.resolve(directory, file).replace(/\\/gi, "\\\\")}"),
                                 `,
-														)}
+														).join("\n")}
                         }
                     `,
 					);
@@ -75,6 +74,8 @@ export function autoload(options?: AutoloadOptions) {
 						/const file = (.*);/i,
 						"const file = fileSources[filePath];",
 					);
+
+					console.log(content);
 
 					return { contents: content };
 				},
