@@ -1,38 +1,39 @@
 {
-    "name": "esbuild-plugin-autoload",
-    "type": "module",
-    "version": "0.1.2",
-    "author": {
-        "name": "kravets"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/kravetsone/esbuild-plugin-autoload"
-    },
-    "description": "Bun/esbuild plugin for work with autoload at runtime",
-    "keywords": [
-        "esbuild-plugin",
-        "bun-plugin",
-        "autoload",
-        "elysia"
-    ],
-    "module": "./dist/index.js",
-    "exports": {
-        ".": "./dist/index.js"
-    },
-    "types": "./dist/index.d.ts",
-    "scripts": {
-        "prepublishOnly": "bun build.ts"
-    },
-    "devDependencies": {
-        "@types/bun": "latest",
-        "elysia": "^1.0.23",
-        "elysia-autoload": "^0.2.4"
-    },
-    "peerDependencies": {
-        "typescript": "^5.0.0"
-    },
-    "files": [
-        "dist"
-    ]
+  "name": "esbuild-plugin-autoload",
+  "type": "module",
+  "version": "0.2.0",
+  "author": {
+    "name": "kravets"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kravetsone/esbuild-plugin-autoload"
+  },
+  "description": "Bun/esbuild plugin for work with autoload at runtime",
+  "keywords": [
+    "esbuild-plugin",
+    "bun-plugin",
+    "autoload",
+    "elysia",
+    "elysia-plugin",
+    "gramio",
+    "gramio-plugin"
+  ],
+  "module": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "prepublishOnly": "bun build.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist"
+  ]
 }
