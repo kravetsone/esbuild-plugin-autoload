@@ -32,7 +32,6 @@ export function autoload(options?: AutoloadOptions) {
 			build.onLoad(
 				{ filter: /(.*)-autoload(\/|\\)dist(\/|\\)index\.(js|mjs|cjs)/i },
 				async (args) => {
-					console.log(args);
 					let content = String(await fs.readFile(args.path));
 
 					const glob = new Glob(pattern);
@@ -42,7 +41,7 @@ export function autoload(options?: AutoloadOptions) {
 							cwd: directory,
 						}),
 					);
-					console.log(files);
+					
 					content = content.replace(
 						/new Bun\.glob\((.*)\)/i,
 						/* ts */ `{
@@ -61,11 +60,13 @@ export function autoload(options?: AutoloadOptions) {
 						"const fileSources = {}",
 						/* ts */ `
                         const fileSources = {
-                            ${files.map(
-															(file) => /* ts */ `
+                            ${files
+															.map(
+																(file) => /* ts */ `
                                 "${file}": await import("${path.resolve(directory, file).replace(/\\/gi, "\\\\")}"),
                                 `,
-														).join("\n")}
+															)
+															.join("\n")}
                         }
                     `,
 					);
@@ -75,7 +76,6 @@ export function autoload(options?: AutoloadOptions) {
 						"const file = fileSources[filePath];",
 					);
 
-					console.log(content);
 
 					return { contents: content };
 				},
