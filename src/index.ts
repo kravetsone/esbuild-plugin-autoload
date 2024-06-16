@@ -30,7 +30,10 @@ export function autoload(options?: AutoloadOptions) {
 		name: "autoload",
 		setup(build) {
 			build.onLoad(
-				{ filter: /(.*)-autoload(\/|\\)dist(\/|\\)index\.(js|mjs|cjs)/i },
+				{
+					filter:
+						/(.*)(@gramio|GRAMIO)\/autoload(\/|\\)dist(\/|\\)index\.(js|mjs|cjs)/i,
+				},
 				async (args) => {
 					let content = String(await fs.readFile(args.path));
 
@@ -41,7 +44,49 @@ export function autoload(options?: AutoloadOptions) {
 							cwd: directory,
 						}),
 					);
-					
+
+					content = content.replace(
+						"const fileSources = {}",
+						/* ts */ `
+                        const fileSources = {
+                            ${files
+															.map(
+																(file) => /* ts */ `
+                                "${file}": await import("${path.resolve(directory, file).replace(/\\/gi, "\\\\")}"),
+                                `,
+															)
+															.join("\n")}
+                        }
+                    `,
+					);
+
+					content = content.replace(
+						/const file = (.*);/i,
+						"const file = fileSources[path];",
+					);
+					content = content.replace('const glob_1 = require("glob");', "");
+					content = content.replace(
+						/\/\/ esbuild-plugin-autoload glob-start\n(.*) \/\/ esbuild-plugin-autoload glob-end/s,
+						/* ts */ `const paths = [${files.map((file) => `"${file}"`).join(", ")}];`,
+					);
+
+					return { contents: content };
+				},
+			);
+
+			build.onLoad(
+				{ filter: /(.*)elysia-autoload(\/|\\)dist(\/|\\)index\.(js|mjs|cjs)/i },
+				async (args) => {
+					let content = String(await fs.readFile(args.path));
+
+					const glob = new Glob(pattern);
+
+					const files = await Array.fromAsync(
+						glob.scan({
+							cwd: directory,
+						}),
+					);
+
 					content = content.replace(
 						/new Bun\.glob\((.*)\)/i,
 						/* ts */ `{
@@ -50,6 +95,7 @@ export function autoload(options?: AutoloadOptions) {
                         }
                     }`,
 					);
+
 					content = content.replace(`require("node:fs")`, fsUsageMock);
 					content = content.replace(
 						`import fs from "node:fs";`,
@@ -75,7 +121,6 @@ export function autoload(options?: AutoloadOptions) {
 						/const file = (.*);/i,
 						"const file = fileSources[filePath];",
 					);
-
 
 					return { contents: content };
 				},

@@ -72,3 +72,4 @@ Then, build it with `bun build.ts` and run with `bun out/index.ts`
 Sadly, this plugin can only work with supported libraries.
 
 -   [`elysia-autoload`](https://github.com/kravetsone/elysia-autoload)
+-   [`@gramio/autoload`](https://github.com/gramiojs/autoload)
