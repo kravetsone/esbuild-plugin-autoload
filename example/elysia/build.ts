@@ -1,4 +1,4 @@
-import autoload from "../src";
+import autoload from "../../src";
 
 await Bun.build({
 	entrypoints: ["./index.ts"],
