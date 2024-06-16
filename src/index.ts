@@ -22,9 +22,20 @@ const fsUsageMock = /* ts */ `{
     }
 }`;
 
-export function autoload(options?: AutoloadOptions) {
-	const pattern = options?.pattern ?? "**/*.{ts,tsx,js,jsx,mjs,cjs}";
-	const directory = options?.directory ?? "./example/routes";
+const DEFAULT_PATTERN = "**/*.{ts,tsx,js,jsx,mjs,cjs}";
+const DEFAULT_DIRECTORY = "./example/routes";
+
+export function autoload(options?: AutoloadOptions): BunPlugin;
+export function autoload(options?: string): BunPlugin;
+export function autoload(options?: AutoloadOptions | string) {
+	const pattern =
+		typeof options === "object"
+			? options?.pattern ?? DEFAULT_PATTERN
+			: DEFAULT_PATTERN;
+	const directory =
+		typeof options === "string"
+			? options
+			: options?.directory ?? DEFAULT_DIRECTORY;
 
 	return {
 		name: "autoload",

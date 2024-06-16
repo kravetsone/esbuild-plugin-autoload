@@ -48,6 +48,17 @@ await Bun.$`bun build --compile out/index.js`;
 | pattern?   | string | "\*\*\/\*.{ts,tsx,js,jsx,mjs,cjs}" | [Glob patterns](<https://en.wikipedia.org/wiki/Glob_(programming)>) |
 | directory? | string | "./src/routes"                     | The folder where something that will be autoloaded are located      |
 
+You can also pass the directory by the first argument instead of an object with full options
+
+```ts
+await Bun.build({
+    entrypoints: ["src/index.ts"],
+    target: "bun",
+    outdir: "out",
+    plugins: [autoload("./src/commands")],
+}).then(console.log);
+```
+
 ### [esbuild](https://esbuild.github.io/) usage
 
 ```ts
