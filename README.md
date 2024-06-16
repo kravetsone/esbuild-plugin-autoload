@@ -47,6 +47,8 @@ await esbuild
     .then(console.log);
 ```
 
+Then, build it with `bun build.ts` and run with `bun out/index.ts`
+
 ### Supported `autoload`-ers
 
 Sadly, this plugin can only work with supported libraries.
