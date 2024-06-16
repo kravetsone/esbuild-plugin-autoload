@@ -13,6 +13,7 @@ import { autoload } from "esbuild-plugin-autoload"; // default import also suppo
 
 await Bun.build({
     entrypoints: ["src/index.ts"],
+    target: "bun",
     outdir: "out",
     plugins: [autoload()],
 }).then(console.log);
@@ -20,7 +21,7 @@ await Bun.build({
 
 Then, build it with `bun build.ts` and run with `bun out/index.ts`
 
-### Bun compile usage
+### [Bun compile](https://bun.sh/docs/bundler/executables) usage
 
 You can bundle and then compile it into a [single executable binary file](https://bun.sh/docs/bundler/executables)
 
@@ -29,6 +30,7 @@ import { autoload } from "esbuild-plugin-autoload"; // default import also suppo
 
 await Bun.build({
     entrypoints: ["src/index.ts"],
+    target: "bun",
     outdir: "out",
     plugins: [autoload()],
 }).then(console.log);
