@@ -57,8 +57,9 @@ export function autoload(options?: AutoloadOptions | string) {
 					);
 
 					content = content.replace(
-						"const fileSources = {}",
-						/* ts */ `
+						"autoload(options) {",
+						/* tsss */ `
+						autoload(options) {
                         const fileSources = {
                             ${files
 															.map(
@@ -75,12 +76,14 @@ export function autoload(options?: AutoloadOptions | string) {
 						/const file = (.*);/i,
 						"const file = fileSources[path];",
 					);
-					content = content.replace('const glob_1 = require("glob");', "");
+					content = content
+						.replace("var fdir = require('fdir');", "")
+						.replace('import { fdir } from "fdir";', "");
 					content = content.replace(
-						/\/\/ esbuild-plugin-autoload glob-start\n(.*) \/\/ esbuild-plugin-autoload glob-end/s,
+						/const paths = (.*);/s,
 						/* ts */ `const paths = [${files.map((file) => `"${file}"`).join(", ")}];`,
 					);
-
+					console.log(content);
 					return { contents: content };
 				},
 			);
@@ -107,15 +110,14 @@ export function autoload(options?: AutoloadOptions | string) {
                     }`,
 					);
 
-					content = content.replace(`require("node:fs")`, fsUsageMock);
 					content = content.replace(
-						`import fs from "node:fs";`,
+						`import fs from 'node:fs';`,
 						`var { default: fs} = ${fsUsageMock}`,
 					);
 
 					content = content.replace(
-						"const fileSources = {}",
-						/* ts */ `
+						"autoload(options = {}) {",
+						/* tsss */ `autoload(options = {}) {
                         const fileSources = {
                             ${files
 															.map(
@@ -132,7 +134,8 @@ export function autoload(options?: AutoloadOptions | string) {
 						/const file = (.*);/i,
 						"const file = fileSources[filePath];",
 					);
-
+					
+					console.log(content);
 					return { contents: content };
 				},
 			);

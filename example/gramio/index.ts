@@ -1,6 +1,6 @@
-import { autoload } from "@gramio/autoload";
 // index.ts
 import { Bot } from "gramio";
+import { autoload } from "./node_modules/@gramio/autoload";
 
 const bot = new Bot(process.env.TOKEN as string)
 	.extend(autoload())
