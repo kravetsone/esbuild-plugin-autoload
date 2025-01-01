@@ -2,8 +2,8 @@
 
 This [esbuild](https://esbuild.github.io/)/[Bun](https://bun.sh/docs/bundler) bundler plugin helps to use libraries for `autoload` endpoints, command and etc. At the build stage, it obtains what needs to be `import`-ed and includes it in the final file
 
-> [!WARNING]
-> For now, it runs only by [Bun](https://bun.sh/) runtime
+> [!IMPORTANT]
+> You need `Bun` or `Node@>=22` to run this plugin
 
 # [Bun build](https://bun.sh/docs/bundler) usage
 
@@ -76,7 +76,7 @@ await esbuild
     .then(console.log);
 ```
 
-Then, build it with `bun build.ts` and run with `bun out/index.ts`
+Then, build it with `bunx tsx build.ts` and run with `node out/index.ts`
 
 ### Supported `autoload`-ers
 
@@ -84,3 +84,8 @@ Sadly, this plugin can only work with supported libraries.
 
 -   [`elysia-autoload`](https://github.com/kravetsone/elysia-autoload)
 -   [`@gramio/autoload`](https://github.com/gramiojs/autoload)
+
+### TODO:
+
+-   [ ] Think more about multiple plugins usage with different CWD
+-   [ ] Rewrite to `unplugin`

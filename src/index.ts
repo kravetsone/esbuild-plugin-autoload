@@ -1,6 +1,16 @@
-import fs from "node:fs/promises";
+import fs from "node:fs";
 import path from "node:path";
-import { type BunPlugin, Glob } from "bun";
+import type { BunPlugin } from "bun";
+
+export const IS_BUN = typeof Bun !== "undefined";
+
+if (!IS_BUN && !fs.globSync) throw new Error("Node@>=22 or Bun is required");
+
+export function globSync(globPattern: string, globOptions: { cwd?: string }) {
+	return IS_BUN
+		? Array.from(new Bun.Glob(globPattern).scanSync(globOptions))
+		: fs.globSync(globPattern, globOptions);
+}
 
 export interface AutoloadOptions {
 	pattern?: string;
@@ -30,12 +40,12 @@ export function autoload(options?: string): BunPlugin;
 export function autoload(options?: AutoloadOptions | string) {
 	const pattern =
 		typeof options === "object"
-			? options?.pattern ?? DEFAULT_PATTERN
+			? (options?.pattern ?? DEFAULT_PATTERN)
 			: DEFAULT_PATTERN;
 	const directory =
 		typeof options === "string"
 			? options
-			: options?.directory ?? DEFAULT_DIRECTORY;
+			: (options?.directory ?? DEFAULT_DIRECTORY);
 
 	return {
 		name: "autoload",
@@ -46,15 +56,9 @@ export function autoload(options?: AutoloadOptions | string) {
 						/(.*)(@gramio|GRAMIO)\/autoload(\/|\\)dist(\/|\\)index\.(js|mjs|cjs)/i,
 				},
 				async (args) => {
-					let content = String(await fs.readFile(args.path));
+					let content = String(await fs.promises.readFile(args.path));
 
-					const glob = new Glob(pattern);
-
-					const files = await Array.fromAsync(
-						glob.scan({
-							cwd: directory,
-						}),
-					);
+					const files = globSync(pattern, { cwd: directory });
 
 					content = content.replace(
 						"autoload(options) {",
@@ -64,7 +68,9 @@ export function autoload(options?: AutoloadOptions | string) {
                             ${files
 															.map(
 																(file) => /* ts */ `
-                                "${file}": await import("${path.resolve(directory, file).replace(/\\/gi, "\\\\")}"),
+                                "${file}": await import("${path
+																	.resolve(directory, file)
+																	.replace(/\\/gi, "\\\\")}"),
                                 `,
 															)
 															.join("\n")}
@@ -81,33 +87,29 @@ export function autoload(options?: AutoloadOptions | string) {
 						.replace('import { fdir } from "fdir";', "");
 					content = content.replace(
 						/const paths = (.*);/s,
-						/* ts */ `const paths = [${files.map((file) => `"${file}"`).join(", ")}];`,
+						/* ts */ `const paths = [${files
+							.map((file) => `"${file}"`)
+							.join(", ")}];`,
 					);
-					console.log(content);
+					// console.log(content);
 					return { contents: content };
 				},
 			);
 
 			build.onLoad(
-				{ filter: /(.*)elysia-autoload(\/|\\)dist(\/|\\)index\.(js|mjs|cjs)/i },
+				{
+					filter: /(.*)elysia-autoload(\/|\\)dist(\/|\\)index\.(js|mjs|cjs)/i,
+				},
 				async (args) => {
-					let content = String(await fs.readFile(args.path));
+					let content = String(await fs.promises.readFile(args.path));
 
-					const glob = new Glob(pattern);
-
-					const files = await Array.fromAsync(
-						glob.scan({
-							cwd: directory,
-						}),
-					);
+					const files = globSync(pattern, { cwd: directory });
 
 					content = content.replace(
-						/new Bun\.glob\((.*)\)/i,
-						/* ts */ `{
-                        async *scan() {
-                            ${files.map((file) => `yield "${file}";`).join("\n")}
-                        }
-                    }`,
+						"const files = globSync(globPattern, globOptions);",
+						/* ts */ `const files = [${files
+							.map((file) => `"${file}"`)
+							.join(",")}];`,
 					);
 
 					content = content.replace(
@@ -122,7 +124,9 @@ export function autoload(options?: AutoloadOptions | string) {
                             ${files
 															.map(
 																(file) => /* ts */ `
-                                "${file}": await import("${path.resolve(directory, file).replace(/\\/gi, "\\\\")}"),
+                                "${file}": await import("${path
+																	.resolve(directory, file)
+																	.replace(/\\/gi, "\\\\")}"),
                                 `,
 															)
 															.join("\n")}
@@ -134,8 +138,8 @@ export function autoload(options?: AutoloadOptions | string) {
 						/const file = (.*);/i,
 						"const file = fileSources[filePath];",
 					);
-					
-					console.log(content);
+
+					// console.log(content);
 					return { contents: content };
 				},
 			);
