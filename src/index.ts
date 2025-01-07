@@ -15,6 +15,7 @@ export function globSync(globPattern: string, globOptions: { cwd?: string }) {
 export interface AutoloadOptions {
 	pattern?: string;
 	directory?: string;
+	debug?: boolean;
 }
 
 const fsUsageMock = /* ts */ `{
@@ -46,6 +47,7 @@ export function autoload(options?: AutoloadOptions | string) {
 		typeof options === "string"
 			? options
 			: (options?.directory ?? DEFAULT_DIRECTORY);
+	const debug = typeof options === "object" ? options?.debug ?? false : false;
 
 	return {
 		name: "autoload",
@@ -91,7 +93,9 @@ export function autoload(options?: AutoloadOptions | string) {
 							.map((file) => `"${file}"`)
 							.join(", ")}];`,
 					);
-					// console.log(content);
+
+					if (debug) console.log(content);
+
 					return { contents: content };
 				},
 			);
@@ -138,8 +142,9 @@ export function autoload(options?: AutoloadOptions | string) {
 						/const file = (.*);/i,
 						"const file = fileSources[filePath];",
 					);
+					
+					if (debug) console.log(content);
 
-					// console.log(content);
 					return { contents: content };
 				},
 			);

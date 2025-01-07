@@ -43,10 +43,11 @@ await Bun.$`bun build --compile out/index.js`;
 
 ## Options
 
-| Key        | Type   | Default                            | Description                                                         |
-| ---------- | ------ | ---------------------------------- | ------------------------------------------------------------------- |
-| pattern?   | string | "\*\*\/\*.{ts,tsx,js,jsx,mjs,cjs}" | [Glob patterns](<https://en.wikipedia.org/wiki/Glob_(programming)>) |
-| directory? | string | "./src/routes"                     | The folder where something that will be autoloaded are located      |
+| Key        | Type    | Default                            | Description                                                         |
+| ---------- | ------- | ---------------------------------- | ------------------------------------------------------------------- |
+| pattern?   | string  | "\*\*\/\*.{ts,tsx,js,jsx,mjs,cjs}" | [Glob patterns](<https://en.wikipedia.org/wiki/Glob_(programming)>) |
+| directory? | string  | "./src/routes"                     | The folder where something that will be autoloaded are located      |
+| debug?     | boolean | false                              | Debug mode, will log generated code                                 |
 
 You can also pass the directory by the first argument instead of an object with full options
 
