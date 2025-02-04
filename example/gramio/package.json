@@ -9,7 +9,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@gramio/autoload": "1",
+    "@gramio/autoload": "^1.1.0",
     "gramio": "^0.0.39"
   }
 }

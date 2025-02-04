@@ -55,7 +55,7 @@ export function autoload(options?: AutoloadOptions | string) {
 			build.onLoad(
 				{
 					filter:
-						/(.*)(@gramio|GRAMIO)\/autoload(\/|\\)dist(\/|\\)index\.(js|mjs|cjs)/i,
+						/(.*)(@gramio|GRAMIO)[/\\]autoload[/\\]dist[/\\]index\.(js|mjs|cjs)$/i,
 				},
 				async (args) => {
 					let content = String(await fs.promises.readFile(args.path));
@@ -88,7 +88,7 @@ export function autoload(options?: AutoloadOptions | string) {
 						.replace("var fdir = require('fdir');", "")
 						.replace('import { fdir } from "fdir";', "");
 					content = content.replace(
-						/const paths = (.*);/s,
+						/const paths = (.*);/,
 						/* ts */ `const paths = [${files
 							.map((file) => `"${file}"`)
 							.join(", ")}];`,

@@ -4,5 +4,8 @@ await Bun.build({
 	entrypoints: ["./index.ts"],
 	outdir: "out",
 	// target: "bun",
-	plugins: [autoload("./commands")],
+	plugins: [autoload({
+		directory: "./commands",
+		debug: true,
+	})],
 }).then(console.log);
