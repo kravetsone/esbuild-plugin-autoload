@@ -82,13 +82,13 @@ export function autoload(options?: AutoloadOptions | string) {
 
 					content = content.replace(
 						/const file = (.*);/i,
-						"const file = fileSources[path];",
+						"const file = fileSources[filePath];",
 					);
 					content = content
 						.replace("var fdir = require('fdir');", "")
 						.replace('import { fdir } from "fdir";', "");
 					content = content.replace(
-						/const paths = (.*);/,
+						/const paths = ([\s\S]*?);/m,
 						/* ts */ `const paths = [${files
 							.map((file) => `"${file}"`)
 							.join(", ")}];`,
